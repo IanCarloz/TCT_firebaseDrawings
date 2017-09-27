@@ -27,5 +27,11 @@ function draw() {
     }
     drawing.push(point);
   }
-  // console.log(drawing);
+  beginShape();
+  stroke(255);
+  strokeWeight(4);
+  noFill();
+  for (var i = 0; i < drawing.length; i++) {
+    vertex(drawing[i].x, drawing[i].y);
+  }
 }
