@@ -1,10 +1,16 @@
 var database;
 var drawing = [];
 var currentPath = [ ];
+var isDrawing = false;
 
 function setup() {
   canvas = createCanvas(200, 200);
   canvas.mousePressed(startPath);
+  canvas.mouseReleased(endPath);
+  canvas.parent('canvascontainer');
+
+  var saveButton = select('#saveButton');
+  saveButton.mousePressed(saveDrawing);
 
   var config = {
     apiKey: "AIzaSyAmyuals0m159WWRgl7YbsDStId6z7aG7g",
@@ -19,15 +25,19 @@ function setup() {
 }
 
 function startPath() {
+  isDrawing = true;
   currentPath = [];
   drawing.push(currentPath);
+}
 
+function endPath() {
+  isDrawing = false;
 }
 
 function draw() {
   background(0);
 
-  if (mouseIsPressed) {
+  if (isDrawing) {
     var point = {
       x: mouseX,
       y: mouseY
@@ -46,4 +56,13 @@ function draw() {
     }
     endShape();
   }
+}
+
+function saveDrawing() {
+  var ref = database.ref('drawings');
+  var data = {
+    name: "Ian",
+    drawing: drawing
+  }
+  ref.push(data) ;
 }
