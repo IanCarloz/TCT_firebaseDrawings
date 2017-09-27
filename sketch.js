@@ -80,14 +80,22 @@ function saveDrawing() {
 }
 
 function gotData(data) {
+
+  // clear the listing
+  var elts = selectAll('.listing');
+  for (var i = 0; i < elts.length; i++) {
+    elts[i].remove();
+  }
+
   var drawings = data.val();
   var keys = Object.keys(drawings);
   for (var i = 0; i < keys.length; i++) {
     var key = keys[i];
     // console.log(key);
     var li = createElement('li', ' ');
+    li.class('listing');
     var ahref = createA('#', key);
-    ahref.mousePressed(showDrawing );
+    ahref.mousePressed(showDrawing);
     ahref.parent(li);
     li.parent('drawinglist');
   }
