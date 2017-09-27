@@ -6,15 +6,14 @@ var isDrawing = false;
 function setup() {
   canvas = createCanvas(200, 200);
   canvas.mousePressed(startPath);
-  canvas.mouseReleased(endPath);
   canvas.parent('canvascontainer');
+  canvas.mouseReleased(endPath);
 
   var saveButton = select('#saveButton');
   saveButton.mousePressed(saveDrawing);
+
   var clearButton = select('#clearButton');
-  clearButton.mousePressed(saveDrawing(){
-    console.log('si funciona el botón.');
-  });
+  clearButton.mousePressed(clearDrawing);
 
   var config = {
     apiKey: "AIzaSyAmyuals0m159WWRgl7YbsDStId6z7aG7g",
@@ -74,6 +73,7 @@ function saveDrawing() {
   }
   var result = ref.push(data, dataSent);
   console.log(result.key);
+
   function dataSent(err, status) {
     console.log(status);
   }
@@ -85,7 +85,7 @@ function gotData(data) {
   for (var i = 0; i < keys.length; i++) {
     var key = keys[i];
     // console.log(key);
-    var li = createElement('li',  );
+    var li = createElement('li', ' ');
     var ahref = createA('#', key);
     ahref.mousePressed(showDrawing );
     ahref.parent(li);
@@ -109,4 +109,7 @@ function showDrawing() {
     // console.log(drawing);
   }
 }
-console.log('hola');
+
+function clearDrawing() {
+  drawing = [];
+}
