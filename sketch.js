@@ -5,6 +5,7 @@ var isDrawing = false;
 
 function setup() {
   canvas = createCanvas(200, 200);
+
   canvas.mousePressed(startPath);
   canvas.parent('canvascontainer');
   canvas.mouseReleased(endPath);
@@ -25,6 +26,13 @@ function setup() {
   };
   firebase.initializeApp(config);
   database = firebase.database();
+
+  var params = getURLParams();
+  console.log(params);
+  if (params.id) {
+    console.log(params.id);
+    showDrawing(params.id);
+  }
 
   var ref = database.ref('drawings');
   ref.on('value', gotData, errData);
@@ -97,6 +105,11 @@ function gotData(data) {
     var ahref = createA('#', key);
     ahref.mousePressed(showDrawing);
     ahref.parent(li);
+
+    var perma = createA('?id='+key, 'permalink');
+    perma.parent(li);
+    perma.style('padding', '4px')
+
     li.parent('drawinglist');
   }
 }
@@ -105,11 +118,15 @@ function errData(err) {
   console.log(err);
 }
 
-function showDrawing() {
-  var key = this.html();
+function showDrawing(key) {
+  console.log(arguments);
+  if (key instanceof MouseEvent) {
+    key = this.html();
+  }
+
   var ref = database.ref('drawings/'+key);
 
-  ref.on('value', oneDrawing, errData);
+  ref.once('value', oneDrawing, errData);
 
   function oneDrawing(data) {
     var dbDrawing = data.val();
