@@ -14,7 +14,6 @@ function setup() {
   };
   firebase.initializeApp(config);
   database = firebase.database();
-  console.log(database);
 }
 
 function draw() {
@@ -34,4 +33,5 @@ function draw() {
   for (var i = 0; i < drawing.length; i++) {
     vertex(drawing[i].x, drawing[i].y);
   }
+  endShape();
 }
