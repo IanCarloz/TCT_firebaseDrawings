@@ -1,6 +1,6 @@
 var database;
 var drawing = [];
-var currentPath = [ ];
+var currentPath = [];
 var isDrawing = false;
 
 function setup() {
@@ -11,6 +11,10 @@ function setup() {
 
   var saveButton = select('#saveButton');
   saveButton.mousePressed(saveDrawing);
+  var clearButton = select('#clearButton');
+  clearButton.mousePressed(saveDrawing(){
+    console.log('si funciona el botón.');
+  });
 
   var config = {
     apiKey: "AIzaSyAmyuals0m159WWRgl7YbsDStId6z7aG7g",
@@ -22,6 +26,10 @@ function setup() {
   };
   firebase.initializeApp(config);
   database = firebase.database();
+
+  var ref = database.ref('drawings');
+  ref.on('value', gotData, errData);
+
 }
 
 function startPath() {
@@ -64,5 +72,41 @@ function saveDrawing() {
     name: "Ian",
     drawing: drawing
   }
-  ref.push(data) ;
+  var result = ref.push(data, dataSent);
+  console.log(result.key);
+  function dataSent(err, status) {
+    console.log(status);
+  }
 }
+
+function gotData(data) {
+  var drawings = data.val();
+  var keys = Object.keys(drawings);
+  for (var i = 0; i < keys.length; i++) {
+    var key = keys[i];
+    // console.log(key);
+    var li = createElement('li',  );
+    var ahref = createA('#', key);
+    ahref.mousePressed(showDrawing );
+    ahref.parent(li);
+    li.parent('drawinglist');
+  }
+}
+
+function errData(err) {
+  console.log(err);
+}
+
+function showDrawing() {
+  var key = this.html();
+  var ref = database.ref('drawings/'+key);
+
+  ref.on('value', oneDrawing, errData);
+
+  function oneDrawing(data) {
+    var dbDrawing = data.val();
+    drawing = dbDrawing.drawing
+    // console.log(drawing);
+  }
+}
+console.log('hola');
